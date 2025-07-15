@@ -54,6 +54,13 @@
     init();
   }
 
+  async function startRanking() {
+  console.log('🔹 movies array at start:', movies);
+  const sorted = await mergeSort(movies.map(m => ({ …m })));
+  console.log('🔹 sorted result:', sorted);
+  …
+}
+  
   // 6) Kick off the merge‐sort
   async function startRanking() {
     question.innerHTML = '<h1>Loading…</h1>';
@@ -146,4 +153,10 @@
       resultDiv.appendChild(item);
     });
   }
+  async function startRanking() {
+  console.log('🔹 movies array at start:', movies);
+  const sorted = await mergeSort(movies.map(m => ({ …m })));
+  console.log('🔹 sorted result:', sorted);
+  …
+}
 })();
