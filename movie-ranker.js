@@ -36,10 +36,16 @@
 
   // Reset handler
   resetBtn.addEventListener('click', () => {
-    localStorage.removeItem(STORAGE_KEY);
-    location.reload();
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
   });
 
+  // Home handler
+  homeBtn.addEventListener('click', () => {
+  localStorage.removeItem(STORAGE_KEY);
+  window.location.href = 'index.html';
+  });
+  
   // Initialization: wait for DOM or run immediately if ready
   function init() {
     controls.style.display = 'none';
