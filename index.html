@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Pick Your Ranking</title>
+  <style>
+    body {
+      margin:0; padding:20px; height:100vh;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      background:#111; color:#fff;
+      font-family:Arial,sans-serif;
+    }
+    h1 { margin:0; }
+    .choices, .subchoices {
+      display:flex; gap:1rem;
+      flex-wrap:wrap; justify-content:center;
+      margin-top:1rem;
+    }
+    .btn {
+      padding:.5rem 1rem;
+      border:2px solid #fff;
+      border-radius:4px;
+      background:transparent; color:#fff;
+      cursor:pointer; transition:.2s;
+    }
+    .btn:hover { background:#fff; color:#111; }
+  </style>
+</head>
+<body>
+
+  <h1>1) Choose your universe</h1>
+  <div id="franchises" class="choices">
+    <button class="btn" data-franchise="starwars">Star Wars</button>
+    <button class="btn" data-franchise="mcu">MCU</button>
+  </div>
+
+  <div id="categories" class="subchoices" style="display:none;"></div>
+
+  <script>
+    // define which categories exist for each franchise
+    const available = {
+      starwars: ['movies','tv'],
+      mcu:      ['movies']
+    };
+
+    const franchises = document.getElementById('franchises');
+    const categories  = document.getElementById('categories');
+    let chosenFranchise = null;
+
+    franchises.addEventListener('click', e => {
+      if (!e.target.dataset.franchise) return;
+      chosenFranchise = e.target.dataset.franchise;
+      const cats = available[chosenFranchise] || ['movies'];
+
+      if (cats.length === 1) {
+        // skip sub-step
+        window.location.href =
+          `movie-ranker.html?theme=${chosenFranchise}&category=${cats[0]}`;
+      } else {
+        // show category choices
+        categories.innerHTML = '<h1>2) Choose a category</h1>';
+        cats.forEach(cat => {
+          const btn = document.createElement('button');
+          btn.className = 'btn';
+          btn.dataset.category = cat;
+          btn.textContent = cat[0].toUpperCase() + cat.slice(1);
+          categories.appendChild(btn);
+        });
+        categories.style.display = 'flex';
+      }
+    });
+
+    categories.addEventListener('click', e => {
+      if (!e.target.dataset.category) return;
+      const cat = e.target.dataset.category;
+      window.location.href =
+        `movie-ranker.html?theme=${chosenFranchise}&category=${cat}`;
+    });
+  </script>
+</body>
+</html>
