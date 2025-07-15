@@ -5,28 +5,21 @@
   const theme       = params.get('theme')    || 'starwars';
   const category    = params.get('category') || 'movies';
 
-  console.log('Loading config for:', theme, category);
+  // 1) Load config
   try {
-    // 1. Dynamically import config (sets window.MovieRankerConfig)
     await import(`./configs/${theme}-${category}-config.js`);
-    const cfg = window.MovieRankerConfig;
-    console.log('Config loaded:', cfg);
-
-    // 2. Apply theme styles
-    const { background, fontFamily } = cfg.theme;
-    document.documentElement.style.setProperty('--bg', `url('${background}')`);
-    document.documentElement.style.setProperty('--font', fontFamily);
-
-    // 3. Store movie list
-    window.movieList = cfg.movies;
+    var { theme: cfgTheme, movies } = window.MovieRankerConfig;
   } catch (err) {
-    console.error(`Could not load config for ${theme}/${category}`, err);
     document.getElementById('question').innerHTML =
-      `<h1>Error</h1><p>Could not find config for <strong>${theme}/${category}</strong></p>`;
+      `<h1>Error</h1><p>Missing config for ${theme}/${category}</p>`;
     return;
   }
 
-  // UI element references
+  // 2) Apply theme
+  document.documentElement.style.setProperty('--bg', `url('${cfgTheme.background}')`);
+  document.documentElement.style.setProperty('--font', cfgTheme.fontFamily);
+
+  // 3) UI refs
   const container = document.getElementById('container');
   const question  = document.getElementById('question');
   const choices   = document.getElementById('choices');
@@ -35,57 +28,62 @@
   const resetBtn  = document.getElementById('reset-btn');
   const homeBtn   = document.getElementById('home-btn');
 
-  // Reset handler
-  resetBtn.addEventListener('click', () => {
-  localStorage.removeItem(STORAGE_KEY);
-  location.reload();
-  });
+  // 4) Back button (inject into controls)
+  const backBtn = document.createElement('button');
+  backBtn.id = 'back-btn';
+  backBtn.className = 'control-btn';
+  backBtn.textContent = 'Back';
+  backBtn.style.display = 'none';
+  controls.insertBefore(backBtn, resetBtn);
 
-  // Home handler
-  homeBtn.addEventListener('click', () => {
-  localStorage.removeItem(STORAGE_KEY);
-  window.location.href = 'index.html';
-  });
-  
-  // Initialization: wait for DOM or run immediately if ready
+  // 5) Handlers
+  resetBtn.onclick = () => { localStorage.removeItem(STORAGE_KEY); location.reload(); };
+  homeBtn.onclick  = () => { localStorage.removeItem(STORAGE_KEY); window.location.href = 'index.html'; };
+
+  // 6) History stack
+  const history = [];
+
+  // 7) Init
   function init() {
     controls.style.display = 'none';
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      showResult(JSON.parse(saved));
-    } else {
-      startMergeSort();
-    }
+    if (saved) return showResult(JSON.parse(saved));
+    startMergeSort();
   }
-
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  } else init();
 
-  // Merge-sort logic with UI
+  // 8) Merge‐sort with history
   async function startMergeSort() {
-    const sorted = await mergeSort(window.movieList.map(m => ({ ...m })));
+    const sorted = await mergeSort(movies.map(m=>({...m})));
     localStorage.setItem(STORAGE_KEY, JSON.stringify(sorted));
     showResult(sorted);
   }
 
   async function mergeSort(arr) {
-    if (arr.length <= 1) return arr;
-    const mid   = Math.floor(arr.length / 2);
-    const left  = await mergeSort(arr.slice(0, mid));
+    if (arr.length <=1) return arr;
+    const mid = Math.floor(arr.length/2);
+    const left = await mergeSort(arr.slice(0,mid));
     const right = await mergeSort(arr.slice(mid));
-    return merge(left, right);
+    return merge(left,right);
   }
 
   function merge(left, right) {
     return new Promise(resolve => {
       const merged = [];
-      (function step() {
+
+      (function step(){
         if (left.length && right.length) {
+          // **Push a snapshot before asking**
+          history.push({
+            left: left.slice(),
+            right: right.slice(),
+            merged: merged.slice()
+          });
           showComparison(left[0], right[0]).then(choice => {
-            merged.push(choice === 0 ? left.shift() : right.shift());
+            // Apply the choice
+            merged.push(choice===0 ? left.shift() : right.shift());
             step();
           });
         } else {
@@ -95,43 +93,75 @@
     });
   }
 
-  function showComparison(a, b) {
+  // 9) Show Comparison + handle Back
+  function showComparison(a,b) {
     return new Promise(resolve => {
       question.innerHTML = '<h1>Which do you prefer?</h1>';
       choices.style.display = 'flex';
       resultDiv.style.display = 'none';
+      controls.style.display = 'flex';
+
+      // Show Back only if history length >1
+      backBtn.style.display = history.length>1 ? 'inline-block' : 'none';
+
       choices.innerHTML = '';
-      [a, b].forEach((movie, idx) => {
+      [a,b].forEach((m,i) => {
         const btn = document.createElement('button');
         btn.className = 'choice';
-        btn.onclick = () => resolve(idx);
+        btn.onclick = () => resolve(i);
         const img = document.createElement('img');
-        img.src = movie.poster;
-        img.alt = movie.title;
+        img.src = m.poster; img.alt = m.title;
         btn.appendChild(img);
         choices.appendChild(btn);
       });
     });
   }
 
+  // **Back Button Logic**
+  backBtn.addEventListener('click', () => {
+    // Pop current (incomplete) snapshot
+    history.pop();
+    const { left, right, merged } = history.pop();
+    // Re‐run merge from this state
+    mergeStep(left.slice(), right.slice(), merged.slice());
+  });
+
+  function mergeStep(left, right, merged) {
+    // same as merge's inner "step", but starting from saved state
+    const step = () => {
+      if (left.length && right.length) {
+        // push snapshot
+        history.push({ left: left.slice(), right: right.slice(), merged: merged.slice() });
+        showComparison(left[0], right[0]).then(choice => {
+          merged.push(choice===0 ? left.shift() : right.shift());
+          step();
+        });
+      } else {
+        showResult(merged.concat(left, right));
+      }
+    };
+    step();
+  }
+
+  // 10) Final result
   function showResult(sorted) {
     question.innerHTML = '<h1>Ranking complete!</h1>';
     choices.style.display = 'none';
     container.classList.add('results-active');
-    controls.style.display = 'block';
+    controls.style.display = 'flex';
+    backBtn.style.display = 'none';
+
     resultDiv.style.display = 'grid';
     resultDiv.innerHTML = '';
-    sorted.forEach((movie, idx) => {
+    sorted.forEach((m,i) => {
       const item = document.createElement('div');
       item.className = 'result-item';
       const info = document.createElement('div'); info.className = 'info';
-      const rank = document.createElement('div'); rank.className = 'rank'; rank.textContent = idx + 1;
-      const pc = document.createElement('div'); pc.className = 'poster-container';
-      const img = document.createElement('img'); img.src = movie.poster; img.alt = movie.title;
-      const title = document.createElement('div'); title.className = 'title'; title.textContent = movie.title;
-      pc.append(img, title);
-      info.append(rank, pc);
-      item.append(info);
+      const rank = document.createElement('div'); rank.className = 'rank'; rank.textContent = i+1;
+      const pc   = document.createElement('div'); pc.className = 'poster-container';
+      const img  = document.createElement('img'); img.src = m.poster; img.alt = m.title;
+      const ttl  = document.createElement('div'); ttl.className = 'title'; ttl.textContent = m.title;
+      pc.append(img,ttl); info.append(rank,pc); item.append(info);
       resultDiv.appendChild(item);
     });
   }
