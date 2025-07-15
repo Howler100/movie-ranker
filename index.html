@@ -6,42 +6,90 @@
   <title>Pick Your Ranking</title>
   <style>
     body {
-      margin:0; padding:20px; height:100vh;
-      display:flex; flex-direction:column;
-      align-items:center; justify-content:center;
-      background:#111; color:#fff;
-      font-family:Arial,sans-serif;
+      margin: 0;
+      padding: 20px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #111;
+      color: #fff;
+      font-family: Arial, sans-serif;
     }
-    h1 { margin:0; }
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+      letter-spacing: 1px;
+    }
     .choices, .subchoices {
-      display:flex; gap:1rem;
-      flex-wrap:wrap; justify-content:center;
-      margin-top:1rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 1.5rem;
     }
+    /* BUTTON RESET */
     .btn {
-      padding:.5rem 1rem;
-      border:2px solid #fff;
-      border-radius:4px;
-      background:transparent; color:#fff;
-      cursor:pointer; transition:.2s;
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: transform 0.2s;
     }
-    .btn:hover { background:#fff; color:#111; }
+    .btn:hover {
+      transform: scale(1.05);
+    }
+    /* LOGO IMAGES */
+    .btn img {
+      display: block;
+      width: 220px;
+      height: auto;
+      object-fit: contain;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+    }
+    /* CATEGORY TEXT BUTTONS */
+    .btn-text {
+      padding: 0.75rem 1.5rem;
+      border: 2px solid #fff;
+      border-radius: 4px;
+      background: transparent;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      text-transform: capitalize;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-text:hover {
+      background: rgba(255,255,255,0.1);
+      transform: scale(1.05);
+    }
   </style>
 </head>
 <body>
 
-  <h1>1) Choose your universe</h1>
+  <h1>1) Choose Your Universe</h1>
   <div id="franchises" class="choices">
-    <button class="btn" data-franchise="starwars">Star Wars</button>
-    <button class="btn" data-franchise="mcu">MCU</button>
+    <!-- Star Wars button -->
+    <button class="btn" data-franchise="starwars" aria-label="Star Wars">
+      <img src="assets/logos/star-wars-logo.jpg" alt="Star Wars Logo"/>
+    </button>
+
+    <!-- MCU button -->
+    <button class="btn" data-franchise="mcu" aria-label="Marvel Cinematic Universe">
+      <img src="assets/logos/marvel-logo.png" alt="Marvel Logo"/>
+    </button>
   </div>
 
-  <div id="categories" class="subchoices" style="display:none;"></div>
+  <div id="categories" class="subchoices" style="display:none;">
+    <!-- category buttons will be injected here -->
+  </div>
 
   <script>
     // define which categories exist for each franchise
     const available = {
-      starwars: ['movies','tv'],
+      starwars: ['movies'],
       mcu:      ['movies']
     };
 
@@ -50,8 +98,9 @@
     let chosenFranchise = null;
 
     franchises.addEventListener('click', e => {
-      if (!e.target.dataset.franchise) return;
-      chosenFranchise = e.target.dataset.franchise;
+      const btn = e.target.closest('button[data-franchise]');
+      if (!btn) return;
+      chosenFranchise = btn.dataset.franchise;
       const cats = available[chosenFranchise] || ['movies'];
 
       if (cats.length === 1) {
@@ -60,24 +109,26 @@
           `movie-ranker.html?theme=${chosenFranchise}&category=${cats[0]}`;
       } else {
         // show category choices
-        categories.innerHTML = '<h1>2) Choose a category</h1>';
+        categories.innerHTML = `<h1>2) Choose a Category</h1>`;
         cats.forEach(cat => {
-          const btn = document.createElement('button');
-          btn.className = 'btn';
-          btn.dataset.category = cat;
-          btn.textContent = cat[0].toUpperCase() + cat.slice(1);
-          categories.appendChild(btn);
+          const b = document.createElement('button');
+          b.className = 'btn-text';
+          b.dataset.category = cat;
+          b.textContent = cat;
+          categories.appendChild(b);
         });
         categories.style.display = 'flex';
       }
     });
 
     categories.addEventListener('click', e => {
-      if (!e.target.dataset.category) return;
-      const cat = e.target.dataset.category;
+      const btn = e.target.closest('button[data-category]');
+      if (!btn) return;
+      const cat = btn.dataset.category;
       window.location.href =
         `movie-ranker.html?theme=${chosenFranchise}&category=${cat}`;
     });
   </script>
+
 </body>
 </html>
