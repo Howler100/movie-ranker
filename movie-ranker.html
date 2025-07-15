@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet"/>
   <style>
     :root {
+      --bg: #000000;
       --font: Arial, sans-serif;
     }
     body {
@@ -32,27 +33,19 @@
       letter-spacing:2px; text-transform:uppercase;
       font-family:'Anton',sans-serif;
     }
-    /* Controls (home/back/reset) */
+    /* Controls */
     #controls {
-      display:none;                /* shown in comparison & results */
-      margin-bottom:16px;
-      gap:12px;
-      justify-content:center;
-      display:flex;
+      display:none; margin-bottom:16px; gap:12px;
+      justify-content:center; display:flex;
     }
     .control-btn {
-      font-size:1.1rem;
-      padding:0.5rem 1rem;
-      background:transparent;
-      color:#fff;
-      border:2px solid #fff;
-      border-radius:4px;
-      cursor:pointer;
-      transition:background 0.2s,transform 0.2s;
+      font-size:1.1rem; padding:.5rem 1rem;
+      background:transparent; color:#fff;
+      border:2px solid #fff; border-radius:4px;
+      cursor:pointer; transition:.2s;
     }
     .control-btn:hover {
-      background:rgba(255,255,255,0.1);
-      transform:scale(1.05);
+      background:rgba(255,255,255,0.1); transform:scale(1.05);
     }
     #choices {
       display:flex; gap:16px;
@@ -61,55 +54,32 @@
     }
     button.choice {
       background:transparent; border:none;
-      flex:1 1 120px; max-width:250px;
-      cursor:pointer; padding:0;
+      flex:1 1 120px; max-width:250px; padding:0;
+      cursor:pointer;
     }
     button.choice img {
       width:100%; border-radius:4px;
       box-shadow:0 1px 4px rgba(0,0,0,0.5);
       display:block;
     }
-    /* Results grid */
     #result {
-      display:none;
+      display:none; margin-top:16px;
       display:grid;
       grid-template-columns:repeat(2,minmax(140px,1fr));
-      column-gap:50px;
-      row-gap:50px;
-      margin-top:16px;
+      column-gap:50px; row-gap:50px;
       justify-items:center;
     }
-    .result-item {
-      display:flex; flex-direction:column;
-      align-items:center; padding:12px;
-    }
-    .info {
-      display:flex; gap:12px;
-      align-items:center; justify-content:center;
-      flex-wrap:wrap;
-    }
-    .rank {
-      font-size:2.5rem; flex-shrink:0;
-      font-family:'Anton',sans-serif;
-    }
-    .poster-container img {
-      width:140px; border-radius:4px;
-    }
-    .title {
-      margin-top:4px; font-size:0.875rem;
-      max-width:140px; word-wrap:break-word;
-    }
-    @media (min-width:480px) {
-      #question h1 { font-size:2.25rem; }
+    .result-item { display:flex; flex-direction:column; align-items:center; }
+    .info { display:flex; gap:12px; align-items:center; justify-content:center; flex-wrap:wrap; }
+    .rank { font-size:2.5rem; font-family:'Anton',sans-serif; }
+    .poster-container img { width:140px; border-radius:4px; }
+    .title { margin-top:4px; font-size:.875rem; max-width:140px; word-wrap:break-word; color:#fff; }
+    @media(min-width:480px) {
       .poster-container img { width:180px; }
-      .title { max-width:180px; font-size:1rem; }
-      #result {
-        grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-        column-gap:60px; row-gap:60px;
-      }
+      .title { max-width:180px; }
+      #result { grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); column-gap:60px; row-gap:60px; }
     }
-    @media (min-width:768px) {
-      #question h1 { font-size:2.5rem; }
+    @media(min-width:768px) {
       .poster-container img { width:220px; }
       .title { max-width:220px; }
       #result { column-gap:70px; row-gap:70px; }
@@ -119,13 +89,11 @@
 <body>
   <div id="container">
     <div id="question"><h1>Loading…</h1></div>
-
     <div id="controls">
       <button id="home-btn"  class="control-btn">Home</button>
       <button id="back-btn"  class="control-btn">Back</button>
       <button id="reset-btn" class="control-btn">Reset</button>
     </div>
-
     <div id="choices"></div>
     <div id="result"></div>
   </div>
