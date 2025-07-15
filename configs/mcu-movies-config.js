@@ -1,7 +1,7 @@
 // configs/mcu-movies-config.js
 window.MovieRankerConfig = {
   theme: {
-    background: 'assets/backgrounds/marvel-background.jpg',
+    background: 'assets/logos/marvel-studios-logo.jpg',
     fontFamily: "'Anton', sans-serif"
   },
   movies: [
