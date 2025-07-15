@@ -1,32 +1,32 @@
 // movie-ranker.js
 (async () => {
   const STORAGE_KEY = 'mcuRanking';
-  const params   = new URLSearchParams(window.location.search);
-  const theme    = params.get('theme')    || 'starwars';
-  const category = params.get('category') || 'movies';
+  const params      = new URLSearchParams(window.location.search);
+  const theme       = params.get('theme')    || 'starwars';
+  const category    = params.get('category') || 'movies';
 
   console.log('Loading config for:', theme, category);
   try {
-    // load the config script (which writes window.MovieRankerConfig)
+    // 1. Dynamically import config (sets window.MovieRankerConfig)
     await import(`./configs/${theme}-${category}-config.js`);
     const cfg = window.MovieRankerConfig;
     console.log('Config loaded:', cfg);
 
-    // apply background & font
+    // 2. Apply theme styles
     const { background, fontFamily } = cfg.theme;
     document.documentElement.style.setProperty('--bg', `url('${background}')`);
     document.documentElement.style.setProperty('--font', fontFamily);
 
-    // movie list
-    var movies = cfg.movies;
+    // 3. Store movie list
+    window.movieList = cfg.movies;
   } catch (err) {
-    console.error(`Could not load ./configs/${theme}-${category}-config.js`, err);
+    console.error(`Could not load config for ${theme}/${category}`, err);
     document.getElementById('question').innerHTML =
       `<h1>Error</h1><p>Could not find config for <strong>${theme}/${category}</strong></p>`;
     return;
   }
 
-  // UI references
+  // UI element references
   const container = document.getElementById('container');
   const question  = document.getElementById('question');
   const choices   = document.getElementById('choices');
@@ -34,14 +34,14 @@
   const controls  = document.getElementById('controls');
   const resetBtn  = document.getElementById('reset-btn');
 
-  // reset button
+  // Reset handler
   resetBtn.addEventListener('click', () => {
     localStorage.removeItem(STORAGE_KEY);
     location.reload();
   });
 
-  // on load, either resume or start sorting
-  document.addEventListener('DOMContentLoaded', () => {
+  // Initialization: wait for DOM or run immediately if ready
+  function init() {
     controls.style.display = 'none';
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
@@ -49,12 +49,17 @@
     } else {
       startMergeSort();
     }
-  });
+  }
 
-  // --- merge-sort UI logic ---
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 
+  // Merge-sort logic with UI
   async function startMergeSort() {
-    const sorted = await mergeSort(movies.map(m => ({ ...m })));
+    const sorted = await mergeSort(window.movieList.map(m => ({ ...m })));
     localStorage.setItem(STORAGE_KEY, JSON.stringify(sorted));
     showResult(sorted);
   }
@@ -92,7 +97,7 @@
       [a, b].forEach((movie, idx) => {
         const btn = document.createElement('button');
         btn.className = 'choice';
-        btn.onclick   = () => resolve(idx);
+        btn.onclick = () => resolve(idx);
         const img = document.createElement('img');
         img.src = movie.poster;
         img.alt = movie.title;
@@ -105,34 +110,18 @@
   function showResult(sorted) {
     question.innerHTML = '<h1>Ranking complete!</h1>';
     choices.style.display = 'none';
-    document.getElementById('progress')?.style.display = 'none';
     container.classList.add('results-active');
     controls.style.display = 'block';
-
     resultDiv.style.display = 'grid';
     resultDiv.innerHTML = '';
     sorted.forEach((movie, idx) => {
       const item = document.createElement('div');
       item.className = 'result-item';
-
-      const info = document.createElement('div');
-      info.className = 'info';
-
-      const rank = document.createElement('div');
-      rank.className = 'rank';
-      rank.textContent = idx + 1;
-
-      const pc = document.createElement('div');
-      pc.className = 'poster-container';
-
-      const img = document.createElement('img');
-      img.src = movie.poster;
-      img.alt = movie.title;
-
-      const title = document.createElement('div');
-      title.className = 'title';
-      title.textContent = movie.title;
-
+      const info = document.createElement('div'); info.className = 'info';
+      const rank = document.createElement('div'); rank.className = 'rank'; rank.textContent = idx + 1;
+      const pc = document.createElement('div'); pc.className = 'poster-container';
+      const img = document.createElement('img'); img.src = movie.poster; img.alt = movie.title;
+      const title = document.createElement('div'); title.className = 'title'; title.textContent = movie.title;
       pc.append(img, title);
       info.append(rank, pc);
       item.append(info);
