@@ -2,7 +2,7 @@
 window.MovieRankerConfig = {
   theme: {
     background: 'assets/backgrounds/star-wars-2.jpg',
-    fontFamily: "'Star Jedi', Arial, sans-serif"
+    fontFamily: "'Audiowide', sans-serif"
   },
   movies: [
     { title: 'A New Hope (1977)',            poster: 'assets/posters/starwars/a-new-hope.jpg' },
