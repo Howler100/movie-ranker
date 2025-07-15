@@ -1,7 +1,7 @@
 // configs/starwars-movies-config.js
 window.MovieRankerConfig = {
   theme: {
-    background: 'assets/backgrounds/stars-background.png',
+    background: 'assets/backgrounds/stars-wars-logo.jpg',
     fontFamily: "'Star Jedi', Arial, sans-serif"
   },
   movies: [
