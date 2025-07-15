@@ -1,13 +1,24 @@
 // movie-ranker.js
 (async () => {
+  const STORAGE_KEY = 'mcuRanking';
   const params   = new URLSearchParams(window.location.search);
   const theme    = params.get('theme')    || 'starwars';
   const category = params.get('category') || 'movies';
 
   console.log('Loading config for:', theme, category);
   try {
+    // load the config script (which writes window.MovieRankerConfig)
     await import(`./configs/${theme}-${category}-config.js`);
-    console.log('Config loaded:', window.MovieRankerConfig);
+    const cfg = window.MovieRankerConfig;
+    console.log('Config loaded:', cfg);
+
+    // apply background & font
+    const { background, fontFamily } = cfg.theme;
+    document.documentElement.style.setProperty('--bg', `url('${background}')`);
+    document.documentElement.style.setProperty('--font', fontFamily);
+
+    // movie list
+    var movies = cfg.movies;
   } catch (err) {
     console.error(`Could not load ./configs/${theme}-${category}-config.js`, err);
     document.getElementById('question').innerHTML =
@@ -15,24 +26,42 @@
     return;
   }
 
-  // 3. Apply background & font from config
-  const { background, fontFamily } = window.MovieRankerConfig.theme;
-  document.documentElement.style.setProperty('--bg', `url('${background}')`);
-  document.documentElement.style.setProperty('--font', fontFamily);
+  // UI references
+  const container = document.getElementById('container');
+  const question  = document.getElementById('question');
+  const choices   = document.getElementById('choices');
+  const resultDiv = document.getElementById('result');
+  const controls  = document.getElementById('controls');
+  const resetBtn  = document.getElementById('reset-btn');
 
-  // 4. Grab the movie data
-  const movies = window.MovieRankerConfig.movies;
+  // reset button
+  resetBtn.addEventListener('click', () => {
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  });
+
+  // on load, either resume or start sorting
+  document.addEventListener('DOMContentLoaded', () => {
+    controls.style.display = 'none';
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      showResult(JSON.parse(saved));
+    } else {
+      startMergeSort();
+    }
+  });
 
   // --- merge-sort UI logic ---
 
   async function startMergeSort() {
     const sorted = await mergeSort(movies.map(m => ({ ...m })));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(sorted));
     showResult(sorted);
   }
 
   async function mergeSort(arr) {
     if (arr.length <= 1) return arr;
-    const mid   = Math.floor(arr.length/2);
+    const mid   = Math.floor(arr.length / 2);
     const left  = await mergeSort(arr.slice(0, mid));
     const right = await mergeSort(arr.slice(mid));
     return merge(left, right);
@@ -41,10 +70,10 @@
   function merge(left, right) {
     return new Promise(resolve => {
       const merged = [];
-      (function step(){
+      (function step() {
         if (left.length && right.length) {
           showComparison(left[0], right[0]).then(choice => {
-            merged.push(choice===0 ? left.shift() : right.shift());
+            merged.push(choice === 0 ? left.shift() : right.shift());
             step();
           });
         } else {
@@ -56,50 +85,58 @@
 
   function showComparison(a, b) {
     return new Promise(resolve => {
-      document.getElementById('question').innerHTML =
-        '<h1>Which do you prefer?</h1>';
-      const C = document.getElementById('choices');
-      C.innerHTML = '';
-      [a,b].forEach((m,i) => {
+      question.innerHTML = '<h1>Which do you prefer?</h1>';
+      choices.style.display = 'flex';
+      resultDiv.style.display = 'none';
+      choices.innerHTML = '';
+      [a, b].forEach((movie, idx) => {
         const btn = document.createElement('button');
         btn.className = 'choice';
-        btn.onclick   = () => resolve(i);
+        btn.onclick   = () => resolve(idx);
         const img = document.createElement('img');
-        img.src = m.poster; img.alt = m.title;
+        img.src = movie.poster;
+        img.alt = movie.title;
         btn.appendChild(img);
-        C.appendChild(btn);
+        choices.appendChild(btn);
       });
     });
   }
 
   function showResult(sorted) {
-    document.getElementById('question').innerHTML =
-      '<h1>Ranking complete!</h1>';
-    document.getElementById('choices').style.display = 'none';
-    document.getElementById('container').classList.add('results-active');
-    const R = document.getElementById('result');
-    R.style.display = 'grid';
-    sorted.forEach((m,i) => {
+    question.innerHTML = '<h1>Ranking complete!</h1>';
+    choices.style.display = 'none';
+    document.getElementById('progress')?.style.display = 'none';
+    container.classList.add('results-active');
+    controls.style.display = 'block';
+
+    resultDiv.style.display = 'grid';
+    resultDiv.innerHTML = '';
+    sorted.forEach((movie, idx) => {
       const item = document.createElement('div');
       item.className = 'result-item';
+
       const info = document.createElement('div');
       info.className = 'info';
+
       const rank = document.createElement('div');
       rank.className = 'rank';
-      rank.textContent = i+1;
-      const pc   = document.createElement('div');
+      rank.textContent = idx + 1;
+
+      const pc = document.createElement('div');
       pc.className = 'poster-container';
-      const img  = document.createElement('img');
-      img.src = m.poster; img.alt = m.title;
-      const ttl  = document.createElement('div');
-      ttl.className = 'title';
-      ttl.textContent = m.title;
-      pc.append(img, ttl);
+
+      const img = document.createElement('img');
+      img.src = movie.poster;
+      img.alt = movie.title;
+
+      const title = document.createElement('div');
+      title.className = 'title';
+      title.textContent = movie.title;
+
+      pc.append(img, title);
       info.append(rank, pc);
       item.append(info);
-      R.append(item);
+      resultDiv.appendChild(item);
     });
   }
-
-  document.addEventListener('DOMContentLoaded', startMergeSort);
 })();
