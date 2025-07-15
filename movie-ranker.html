@@ -11,136 +11,126 @@
       --font: Arial, sans-serif;
     }
     body {
-      margin: 0;
-      padding: 20px;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      margin:0; padding:20px;
+      min-height:100vh;
+      display:flex; align-items:center; justify-content:center;
       background: var(--bg) no-repeat center/cover;
       font-family: var(--font);
     }
     #container {
       background: rgba(0,0,0,0.8);
-      padding: 20px;
-      border-radius: 8px;
-      width: 100%; max-width: 600px;
-      max-height: 90vh; overflow-y: auto;
-      color: #fff; text-align: center;
-      transition: width 0.3s ease;
+      padding:20px; border-radius:8px;
+      width:100%; max-width:600px;
+      max-height:90vh; overflow-y:auto;
+      color:#fff; text-align:center;
+      transition: width .3s ease;
     }
     #container.results-active {
-      width: 90vw; max-width: 90vw;
+      width:90vw; max-width:90vw;
     }
     #question h1 {
-      margin-bottom: 16px;
-      font-size: 2rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      font-family: 'Anton', sans-serif;
+      margin-bottom:16px; font-size:2rem;
+      letter-spacing:2px; text-transform:uppercase;
+      font-family:'Anton',sans-serif;
     }
-    /* Controls (home & reset buttons) */
+    /* Controls (home/back/reset) */
     #controls {
-      margin-bottom: 16px;
-      display: none;
-      gap: 12px;
-      display: flex;
-      justify-content: center;
+      display:none;                /* shown in comparison & results */
+      margin-bottom:16px;
+      gap:12px;
+      justify-content:center;
+      display:flex;
     }
     .control-btn {
-      font-size: 1.1rem;
-      padding: 0.5rem 1rem;
-      background: transparent;
-      color: #fff;
-      border: 2px solid #fff;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.2s;
+      font-size:1.1rem;
+      padding:0.5rem 1rem;
+      background:transparent;
+      color:#fff;
+      border:2px solid #fff;
+      border-radius:4px;
+      cursor:pointer;
+      transition:background 0.2s,transform 0.2s;
     }
     .control-btn:hover {
-      background: rgba(255,255,255,0.1);
-      transform: scale(1.05);
+      background:rgba(255,255,255,0.1);
+      transform:scale(1.05);
     }
     #choices {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-bottom: 16px;
+      display:flex; gap:16px;
+      flex-wrap:wrap; justify-content:center;
+      margin-bottom:16px;
     }
     button.choice {
-      background: transparent; border: none;
-      flex: 1 1 120px; max-width: 250px;
-      cursor: pointer; padding: 0;
+      background:transparent; border:none;
+      flex:1 1 120px; max-width:250px;
+      cursor:pointer; padding:0;
     }
     button.choice img {
-      width: 100%; border-radius: 4px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.5);
-      display: block;
+      width:100%; border-radius:4px;
+      box-shadow:0 1px 4px rgba(0,0,0,0.5);
+      display:block;
     }
     /* Results grid */
     #result {
-      display: none;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(140px, 1fr));
-      column-gap: 50px;
-      row-gap: 50px;
-      margin-top: 16px;
-      justify-items: center;
+      display:none;
+      display:grid;
+      grid-template-columns:repeat(2,minmax(140px,1fr));
+      column-gap:50px;
+      row-gap:50px;
+      margin-top:16px;
+      justify-items:center;
     }
     .result-item {
-      display: flex; flex-direction: column;
-      align-items: center;
-      padding: 12px;
+      display:flex; flex-direction:column;
+      align-items:center; padding:12px;
     }
     .info {
-      display: flex; gap: 12px;
-      align-items: center; justify-content: center;
-      flex-wrap: wrap;
+      display:flex; gap:12px;
+      align-items:center; justify-content:center;
+      flex-wrap:wrap;
     }
     .rank {
-      font-size: 2.5rem; flex-shrink: 0;
-      font-family: 'Anton', sans-serif;
+      font-size:2.5rem; flex-shrink:0;
+      font-family:'Anton',sans-serif;
     }
     .poster-container img {
-      width: 140px;
-      border-radius: 4px;
+      width:140px; border-radius:4px;
     }
     .title {
-      margin-top: 4px; font-size: 0.875rem;
-      max-width: 140px; word-wrap: break-word;
+      margin-top:4px; font-size:0.875rem;
+      max-width:140px; word-wrap:break-word;
     }
-    @media (min-width: 480px) {
-      #question h1 { font-size: 2.25rem; }
-      .poster-container img { width: 180px; }
-      .title { max-width: 180px; font-size: 1rem; }
+    @media (min-width:480px) {
+      #question h1 { font-size:2.25rem; }
+      .poster-container img { width:180px; }
+      .title { max-width:180px; font-size:1rem; }
       #result {
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        column-gap: 60px;
-        row-gap: 60px;
+        grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+        column-gap:60px; row-gap:60px;
       }
     }
-    @media (min-width: 768px) {
-      #question h1 { font-size: 2.5rem; }
-      .poster-container img { width: 220px; }
-      .title { max-width: 220px; }
-      #result {
-        column-gap: 70px;
-        row-gap: 70px;
-      }
+    @media (min-width:768px) {
+      #question h1 { font-size:2.5rem; }
+      .poster-container img { width:220px; }
+      .title { max-width:220px; }
+      #result { column-gap:70px; row-gap:70px; }
     }
   </style>
 </head>
 <body>
   <div id="container">
     <div id="question"><h1>Loading…</h1></div>
+
     <div id="controls">
-      <button id="home-btn" class="control-btn" aria-label="Home">Home</button>
-      <button id="reset-btn" class="control-btn" aria-label="Reset Ranking">Reset</button>
+      <button id="home-btn"  class="control-btn">Home</button>
+      <button id="back-btn"  class="control-btn">Back</button>
+      <button id="reset-btn" class="control-btn">Reset</button>
     </div>
+
     <div id="choices"></div>
     <div id="result"></div>
   </div>
+
   <script type="module" src="movie-ranker.js"></script>
 </body>
 </html>
