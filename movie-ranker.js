@@ -33,6 +33,7 @@
   const resultDiv = document.getElementById('result');
   const controls  = document.getElementById('controls');
   const resetBtn  = document.getElementById('reset-btn');
+  const homeBtn   = document.getElementById('home-btn');
 
   // Reset handler
   resetBtn.addEventListener('click', () => {
