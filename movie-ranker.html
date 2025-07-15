@@ -39,12 +39,15 @@
       text-transform: uppercase;
       font-family: 'Anton', sans-serif;
     }
-    /* Controls (reset button) */
+    /* Controls (home & reset buttons) */
     #controls {
       margin-bottom: 16px;
       display: none;
+      gap: 12px;
+      display: flex;
+      justify-content: center;
     }
-    #reset-btn {
+    .control-btn {
       font-size: 1.1rem;
       padding: 0.5rem 1rem;
       background: transparent;
@@ -54,7 +57,7 @@
       cursor: pointer;
       transition: background 0.2s, transform 0.2s;
     }
-    #reset-btn:hover {
+    .control-btn:hover {
       background: rgba(255,255,255,0.1);
       transform: scale(1.05);
     }
@@ -75,13 +78,13 @@
       box-shadow: 0 1px 4px rgba(0,0,0,0.5);
       display: block;
     }
-    /* Results grid with explicit gap */
+    /* Results grid */
     #result {
-      display: none;          /* hidden until JS toggles */
-      display: grid;          /* ensure grid layout */
+      display: none;
+      display: grid;
       grid-template-columns: repeat(2, minmax(140px, 1fr));
-      column-gap: 50px;       /* horizontal spacing */
-      row-gap: 50px;          /* vertical spacing */
+      column-gap: 50px;
+      row-gap: 50px;
       margin-top: 16px;
       justify-items: center;
     }
@@ -100,7 +103,7 @@
       font-family: 'Anton', sans-serif;
     }
     .poster-container img {
-      width: 140px; /* default image size */
+      width: 140px;
       border-radius: 4px;
     }
     .title {
@@ -132,7 +135,8 @@
   <div id="container">
     <div id="question"><h1>Loading…</h1></div>
     <div id="controls">
-      <button id="reset-btn" aria-label="Reset Ranking">Reset Ranking</button>
+      <button id="home-btn" class="control-btn" aria-label="Home">Home</button>
+      <button id="reset-btn" class="control-btn" aria-label="Reset Ranking">Reset</button>
     </div>
     <div id="choices"></div>
     <div id="result"></div>
