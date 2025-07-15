@@ -46,9 +46,14 @@
   });
   backBtn.addEventListener('click', () => {
     if (picks.length > 0) {
+      // remove last pick, rewind the pointer
       picks.pop();
       stepIndex = picks.length;
-      startMergeSort();
+      // hide current UI and restart (replays picks up to this point)
+      controls.style.display = 'none';
+      choices.style.display  = 'none';
+      resultDiv.style.display = 'none';
+      runMergeSort(movies.map(m => ({ ...m })));
     }
   });
 
@@ -70,6 +75,7 @@
 
   // 7. Modified merge-sort allowing undo
   async function startMergeSort() {
+    picks = [];
     stepIndex = 0;
     question.innerHTML = '<h1>Loading…</h1>';
     choices.style.display = 'none';
@@ -93,13 +99,13 @@
       const merged = [];
       (async function step() {
         if (left.length && right.length) {
-          // Auto-apply past picks if available
           if (stepIndex < picks.length) {
+            // replay an existing pick
             const choice = picks[stepIndex++];
             merged.push(choice === 0 ? left.shift() : right.shift());
             await step();
           } else {
-            // Show comparison and record pick
+            // new comparison
             const choice = await showComparison(left[0], right[0]);
             picks.push(choice);
             stepIndex++;
@@ -118,10 +124,9 @@
     return new Promise(resolve => {
       question.innerHTML = '<h1>Which do you prefer?</h1>';
       choices.innerHTML = '';
-      choices.style.display = 'flex';
+      choices.style.display  = 'flex';
       controls.style.display = 'flex';
 
-      // Back only if history exists
       backBtn.style.display = picks.length > 0 ? 'inline-block' : 'none';
 
       [a, b].forEach((movie, idx) => {
