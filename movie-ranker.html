@@ -1,29 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Movie Ranker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet"/>
-  <style>
+<style>
   /* 1) global box-sizing */
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     box-sizing: border-box;
   }
 
-  /* 2) CSS Variables */
+  /* 2) CSS variables */
   :root {
     --bg: #000;
     --font: Arial, sans-serif;
-    --gap: 1rem;                   /* grid gap & padding */
-    --poster-min: 140px;           /* at least this wide */
-    --poster-max: 220px;           /* never wider than this */
+    --gap: 1rem;
+    --poster-min: 140px;
+    --poster-max: 220px;
   }
 
-  /* 3) Body & container */
+  /* 3) body + background */
   body {
     margin: 0;
     padding: var(--gap);
@@ -36,28 +26,34 @@
     font-family: var(--font);
   }
 
+  /* 4) container */
   #container {
     background: rgba(0,0,0,0.8);
     border-radius: 8px;
     width: 100%;
-    max-width: clamp(300px, 60vw, 600px);
+    max-width: 600px;          /* PICKER stays at 600px */
     max-height: 90vh;
     overflow-y: auto;
     color: #fff;
     text-align: center;
-    transition: width .3s ease;
+    transition: max-width .3s ease;
     padding: var(--gap);
   }
+  /* When results are active, widen it out */
+  #container.results-active {
+    max-width: 90vw;           /* RESULTS expands to 90% of viewport */
+  }
 
-  /* 4) Question heading */
+  /* 5) title / prompt */
   #question h1 {
     margin-bottom: var(--gap);
     font-size: 2rem;
     letter-spacing: 2px;
     text-transform: uppercase;
+    font-family: 'Anton', sans-serif;
   }
 
-  /* 5) Controls */
+  /* 6) controls */
   #controls {
     display: none;
     margin-bottom: var(--gap);
@@ -65,24 +61,22 @@
     justify-content: center;
     display: flex;
   }
-
   .control-btn {
     font-size: 1.1rem;
-    padding: 0.5rem 1rem;
+    padding: .5rem 1rem;
     background: transparent;
     color: #fff;
     border: 2px solid #fff;
     border-radius: 4px;
     cursor: pointer;
-    transition: 0.2s;
+    transition: .2s;
   }
-
   .control-btn:hover {
     background: rgba(255,255,255,0.1);
     transform: scale(1.05);
   }
 
-  /* 6) Choice buttons */
+  /* 7) choice buttons */
   #choices {
     display: flex;
     gap: var(--gap);
@@ -90,7 +84,6 @@
     justify-content: center;
     margin-bottom: var(--gap);
   }
-
   button.choice {
     background: transparent;
     border: none;
@@ -99,7 +92,6 @@
     padding: 0;
     cursor: pointer;
   }
-
   button.choice img {
     width: 100%;
     border-radius: 4px;
@@ -107,7 +99,7 @@
     display: block;
   }
 
-  /* 7) Results grid */
+  /* 8) results grid */
   #result {
     display: none;
     margin-top: var(--gap);
@@ -120,23 +112,30 @@
     padding-inline: var(--gap);
     justify-items: center;
   }
+  /* force 2 columns on narrow phones */
+  @media (max-width: 480px) {
+    #result {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
 
   .result-item {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: var(--gap);
   }
 
-  .info {
+  /* 9) move rank above poster in results */
+  .result-item .info {
     display: flex;
-    gap: var(--gap);
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
   }
 
   .rank {
     font-size: 2.5rem;
+    font-family: 'Anton', sans-serif;
   }
 
   .poster-container img {
@@ -145,28 +144,13 @@
     box-shadow: 0 1px 4px rgba(0,0,0,0.5);
   }
 
-  /* 8) Titles fill cell, wrap nicely */
+  /* 10) titles wrap fully in their cell */
   .title {
     margin-top: 4px;
-    font-size: 0.875rem;
+    font-size: .875rem;
     color: #fff;
     max-width: 100%;
     white-space: normal;
     word-wrap: break-word;
   }
 </style>
-</head>
-<body>
-  <div id="container">
-    <div id="question"><h1>Loading…</h1></div>
-    <div id="controls">
-      <button id="home-btn"  class="control-btn">Home</button>
-      <button id="reset-btn" class="control-btn">Reset</button>
-    </div>
-    <div id="choices"></div>
-    <div id="result"></div>
-  </div>
-
-  <script type="module" src="movie-ranker.js"></script>
-</body>
-</html>
