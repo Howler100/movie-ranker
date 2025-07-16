@@ -7,85 +7,153 @@
   <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet"/>
   <style>
-    :root {
-      --bg: #000000;
-      --font: Arial, sans-serif;
-    }
-    body {
-      margin:0; padding:20px;
-      min-height:100vh;
-      display:flex; align-items:center; justify-content:center;
-      background: var(--bg) no-repeat center/cover;
-      font-family: var(--font);
-    }
-    #container {
-      background: rgba(0,0,0,0.8);
-      padding:20px; border-radius:8px;
-      width:100%; max-width:600px;
-      max-height:90vh; overflow-y:auto;
-      color:#fff; text-align:center;
-      transition: width .3s ease;
-    }
-    #container.results-active {
-      width:90vw; max-width:90vw;
-    }
-    #question h1 {
-      margin-bottom:16px; font-size:2rem;
-      letter-spacing:2px; text-transform:uppercase;
-      font-family:'Anton',sans-serif;
-    }
-    /* Controls: only Home & Reset */
-    #controls {
-      display:none; margin-bottom:16px; gap:12px;
-      justify-content:center; display:flex;
-    }
-    .control-btn {
-      font-size:1.1rem; padding:.5rem 1rem;
-      background:transparent; color:#fff;
-      border:2px solid #fff; border-radius:4px;
-      cursor:pointer; transition:.2s;
-    }
-    .control-btn:hover {
-      background:rgba(255,255,255,0.1); transform:scale(1.05);
-    }
-    #choices {
-      display:flex; gap:16px;
-      flex-wrap:wrap; justify-content:center;
-      margin-bottom:16px;
-    }
-    button.choice {
-      background:transparent; border:none;
-      flex:1 1 120px; max-width:250px; padding:0;
-      cursor:pointer;
-    }
-    button.choice img {
-      width:100%; border-radius:4px;
-      box-shadow:0 1px 4px rgba(0,0,0,0.5);
-      display:block;
-    }
-    #result {
-      display:none; margin-top:16px;
-      display:grid;
-      grid-template-columns:repeat(2,minmax(140px,1fr));
-      column-gap:50px; row-gap:50px;
-      justify-items:center;
-    }
-    .result-item { display:flex; flex-direction:column; align-items:center; }
-    .info { display:flex; gap:12px; align-items:center; justify-content:center; flex-wrap:wrap; }
-    .rank { font-size:2.5rem; font-family:'Anton',sans-serif; }
-    .poster-container img { width:140px; border-radius:4px; }
-    .title { margin-top:4px; font-size:.875rem; max-width:140px; word-wrap:break-word; color:#fff; }
-    @media(min-width:480px) {
-      .poster-container img { width:180px; }
-      .title { max-width:180px; }
-      #result { grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); column-gap:60px; row-gap:60px; }
-    }
-    @media(min-width:768px) {
-      .poster-container img { width:220px; }
-      .title { max-width:220px; }
-      #result { column-gap:70px; row-gap:70px; }
-    }
-  </style>
+  /* 1) global box-sizing */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  /* 2) CSS Variables */
+  :root {
+    --bg: #000;
+    --font: Arial, sans-serif;
+    --gap: 1rem;                   /* grid gap & padding */
+    --poster-min: 140px;           /* at least this wide */
+    --poster-max: 220px;           /* never wider than this */
+  }
+
+  /* 3) Body & container */
+  body {
+    margin: 0;
+    padding: var(--gap);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    font-family: var(--font);
+  }
+
+  #container {
+    background: rgba(0,0,0,0.8);
+    border-radius: 8px;
+    width: 100%;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    color: #fff;
+    text-align: center;
+    transition: width .3s ease;
+    padding: var(--gap);
+  }
+
+  /* 4) Question heading */
+  #question h1 {
+    margin-bottom: var(--gap);
+    font-size: 2rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* 5) Controls */
+  #controls {
+    display: none;
+    margin-bottom: var(--gap);
+    gap: var(--gap);
+    justify-content: center;
+    display: flex;
+  }
+
+  .control-btn {
+    font-size: 1.1rem;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    color: #fff;
+    border: 2px solid #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .control-btn:hover {
+    background: rgba(255,255,255,0.1);
+    transform: scale(1.05);
+  }
+
+  /* 6) Choice buttons */
+  #choices {
+    display: flex;
+    gap: var(--gap);
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: var(--gap);
+  }
+
+  button.choice {
+    background: transparent;
+    border: none;
+    flex: 1 1 var(--poster-min);
+    max-width: var(--poster-max);
+    padding: 0;
+    cursor: pointer;
+  }
+
+  button.choice img {
+    width: 100%;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    display: block;
+  }
+
+  /* 7) Results grid */
+  #result {
+    display: none;
+    margin-top: var(--gap);
+    display: grid;
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(clamp(var(--poster-min), 20vw, var(--poster-max)), 1fr)
+    );
+    gap: var(--gap);
+    padding-inline: var(--gap);
+    justify-items: center;
+  }
+
+  .result-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .info {
+    display: flex;
+    gap: var(--gap);
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .rank {
+    font-size: 2.5rem;
+  }
+
+  .poster-container img {
+    width: clamp(var(--poster-min), 20vw, var(--poster-max));
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  }
+
+  /* 8) Titles fill cell, wrap nicely */
+  .title {
+    margin-top: 4px;
+    font-size: 0.875rem;
+    color: #fff;
+    max-width: 100%;
+    white-space: normal;
+    word-wrap: break-word;
+  }
+</style>
 </head>
 <body>
   <div id="container">
