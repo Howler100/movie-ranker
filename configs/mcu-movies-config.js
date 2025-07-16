@@ -1,4 +1,4 @@
-// configs/mcu-movies-config.jsr
+// configs/mcu-movies-config.js
 window.MovieRankerConfig = {
   theme: {
     background: 'assets/backgrounds/marvel-studios-2.jpg',
@@ -42,5 +42,5 @@ window.MovieRankerConfig = {
   { title: 'Iron Man 2 (2010)',                                poster: 'assets/posters/mcu/movies/Iron Man 2 (2010).jpg' },
   { title: 'The Incredible Hulk (2008)',                      poster: 'assets/posters/mcu/movies/The Incredible Hulk (2008).jpg' },
   { title: 'Iron Man (2008)',                                  poster: 'assets/posters/mcu/movies/Iron Man (2008).jpg' }
-]
+  ]
 };
