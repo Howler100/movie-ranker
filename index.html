@@ -21,6 +21,7 @@
       margin: 0;
       font-size: 2rem;
       letter-spacing: 1px;
+      text-align: center;
     }
     .choices, .subchoices {
       display: flex;
@@ -70,16 +71,17 @@
 <body>
   <h1>Choose Your Universe</h1>
   <div id="franchises" class="choices">
-    <!-- Star Wars button -->
-    <button class="btn" data-franchise="starwars" aria-label="Star Wars">
-      <img src="assets/logos/star-wars-logo.jpg" alt="Star Wars Logo"/>
-    </button>
 
-    <!-- MCU button -->
+    <!-- Marvel button -->
     <button class="btn" data-franchise="mcu" aria-label="Marvel Cinematic Universe">
       <img src="assets/logos/marvel-logo.png" alt="Marvel Logo"/>
     </button>
   </div>
+
+   <!-- Star Wars button -->
+    <button class="btn" data-franchise="starwars" aria-label="Star Wars">
+      <img src="assets/logos/star-wars-logo.jpg" alt="Star Wars Logo"/>
+    </button>
 
   <div id="categories" class="subchoices" style="display:none;">
     <!-- category buttons will be injected here -->
