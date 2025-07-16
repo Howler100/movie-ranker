@@ -31,7 +31,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bg);
+    background: var(--bg) no-repeat center center;
+    background-size: contain;
     font-family: var(--font);
   }
 
@@ -39,7 +40,7 @@
     background: rgba(0,0,0,0.8);
     border-radius: 8px;
     width: 100%;
-    max-width: 90vw;
+    max-width: clamp(300px, 60vw, 600px);
     max-height: 90vh;
     overflow-y: auto;
     color: #fff;
