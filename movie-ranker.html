@@ -29,8 +29,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bg) no-repeat;
-    background-size: contain;
+    background: var(--bg) no-repeat center center;
+    background-size: cover;
+    font-family: var(--font);
   }
 
   /* 4) container */
@@ -57,6 +58,7 @@
     font-size: 2rem;
     letter-spacing: 2px;
     text-transform: uppercase;
+    font-family: var(--font);
   }
 
   /* 6) controls */
@@ -76,6 +78,7 @@
     border-radius: 4px;
     cursor: pointer;
     transition: .2s;
+    font-family: var(--font);
   }
   .control-btn:hover {
     background: rgba(255,255,255,0.1);
@@ -141,7 +144,7 @@
 
   .rank {
     font-size: 2.5rem;
-    font-family: 'Anton', sans-serif;
+    font-family: var(--font);
   }
 
   .poster-container img {
@@ -158,6 +161,7 @@
     max-width: 100%;
     white-space: normal;
     word-wrap: break-word;
+    font-family: var(--font);
   }
 </style>
 </head>
