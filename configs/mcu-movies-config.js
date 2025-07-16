@@ -1,4 +1,4 @@
-// configs/mcu-movies-config.js
+// configs/mcu-movies-config.jsr
 window.MovieRankerConfig = {
   theme: {
     background: 'assets/backgrounds/marvel-studios-2.jpg',
