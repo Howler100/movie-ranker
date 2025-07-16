@@ -1,4 +1,12 @@
-<style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Movie Ranker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet"/>
+  <style>
   /* 1) global box-sizing */
   *, *::before, *::after {
     box-sizing: border-box;
@@ -154,3 +162,18 @@
     word-wrap: break-word;
   }
 </style>
+</head>
+<body>
+  <div id="container">
+    <div id="question"><h1>Loading…</h1></div>
+    <div id="controls">
+      <button id="home-btn"  class="control-btn">Home</button>
+      <button id="reset-btn" class="control-btn">Reset</button>
+    </div>
+    <div id="choices"></div>
+    <div id="result"></div>
+  </div>
+
+  <script type="module" src="movie-ranker.js"></script>
+</body>
+</html>
