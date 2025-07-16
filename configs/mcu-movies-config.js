@@ -8,7 +8,7 @@ window.MovieRankerConfig = {
   { title: 'Fantastic Four: First Steps (2025)',               poster: 'assets/posters/mcu/movies/Fantastic Four First Steps (2025).jpg' },
   { title: 'Thunderbolts (2025)',                              poster: 'assets/posters/mcu/movies/Thunderbolts (2025).jpg' },
   { title: 'Captain America: Brave New World (2025)',          poster: 'assets/posters/mcu/movies/Captain America Brave New World (2025).jpg' },
-  { title: 'Deadpool & Wolverine (2024)',                      poster: 'assets/posters/mcu/movies/Deadpool & Wolverine (2024).jpg' },
+  { title: 'Deadpool & Wolverine (2024)',                      poster: 'assets/posters/mcu/movies/Deadpool Wolverine (2024).jpg' },
   { title: 'The Marvels (2023)',                               poster: 'assets/posters/mcu/movies/The Marvels (2023).jpg' },
   { title: 'Guardians of the Galaxy Vol. 3 (2023)',            poster: 'assets/posters/mcu/movies/Guardians of the Galaxy Vol. 3 (2023).jpg' },
   { title: 'Ant-Man and the Wasp Quantumania (2023)',          poster: 'assets/posters/mcu/movies/Ant-Man and the Wasp Quantumania (2023).jpg' },
