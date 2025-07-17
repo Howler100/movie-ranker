@@ -5,12 +5,12 @@ window.MovieRankerConfig = {
     fontFamily: "'Cinzel', serif"
   },
   movies: [
+    { title: 'Harry Potter and the Prisoner of Azkaban (2004)',
+      poster: 'assets/posters/harrypotter/movies/Harry Potter and the Prisoner of Azkaban (2004).png' },
     { title: "Harry Potter and the Philosopher's Stone (2001)",
       poster: 'assets/posters/harrypotter/movies/Harry Potter and the Philosophers Stone (2001).png' },
     { title: 'Harry Potter and the Chamber of Secrets (2002)',
       poster: 'assets/posters/harrypotter/movies/Harry Potter and the Chamber of Secrets (2002).png' },
-    { title: 'Harry Potter and the Prisoner of Azkaban (2004)',
-      poster: 'assets/posters/harrypotter/movies/Harry Potter and the Prisoner of Azkaban (2004).png' },
     { title: 'Harry Potter and the Goblet of Fire (2005)',
       poster: 'assets/posters/harrypotter/movies/Harry Potter and the Goblet of Fire (2005).png' },
     { title: 'Harry Potter and the Order of the Phoenix (2007)',
