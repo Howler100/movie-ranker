@@ -83,6 +83,11 @@
       <img src="assets/logos/star-wars-logo.jpg" alt="Star Wars Logo"/>
     </button>
   
+    <!-- Mission Impossible button -->
+    <button class="btn" data-franchise="missionimpossible">
+      <img src="assets/logos/mission-impossible-logo.png" alt="Mission Impossible Logo">
+    </button>  
+  
   </div>
   
   <div id="categories" class="subchoices" style="display:none;">
@@ -93,7 +98,8 @@
     // define which categories exist for each franchise
     const available = {
       starwars: ['movies'],
-      mcu:      ['movies']
+      mcu:      ['movies'],
+      missionimpossible: ['movies']
     };
 
     const franchises = document.getElementById('franchises');
