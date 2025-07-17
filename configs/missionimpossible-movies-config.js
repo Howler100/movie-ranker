@@ -13,7 +13,7 @@ window.MovieRankerConfig = {
     { title: 'Mission Impossible - Ghost Protocol (2011)',          poster: 'assets/posters/missionimpossible/movies/Mission Impossible - Ghost Protocol (2011).jpg' },
     { title: 'Mission Impossible - Rogue Nation (2015)',            poster: 'assets/posters/missionimpossible/movies/Mission Impossible - Rogue Nation (2015).jpg' },
     { title: 'Mission Impossible - Fallout (2018)',                 poster: 'assets/posters/missionimpossible/movies/Mission Impossible - Fallout (2018).jpg' },
-    { title: 'Mission Impossible - Dead Reckoning Part One (2023)',  poster: 'assets/posters/missionimpossible/movies/Mission Impossible - Dead Reckoning Part One (2023).jpg' },
+    { title: 'Mission Impossible - Dead Reckoning Part One (2023)', poster: 'assets/posters/missionimpossible/movies/Mission Impossible - Dead Reckoning Part One (2023).jpg' },
     { title: 'Mission Impossible - The Final Reckoning (2025)',     poster: 'assets/posters/missionimpossible/movies/Mission Impossible - The Final Reckoning (2025).jpg' }
   ]
 };
