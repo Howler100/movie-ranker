@@ -1,7 +1,7 @@
 // configs/mcu-tv-config.js
 window.MovieRankerConfig = {
   theme: {
-    background: 'assets/backgrounds/marvel-tv-background.jpg',
+    background: 'assets/backgrounds/mcu-tv-background.jpg',
     fontFamily: "'Anton', sans-serif"
   },
   movies: [
