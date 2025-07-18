@@ -71,12 +71,11 @@
   <h1>Choose Your Universe</h1>
   <div id="franchises" class="choices">
 
-    <!-- Marvel Button -->
+    <!-- Marvel Studios Button -->
     <button class="btn" data-franchise="mcu" aria-label="Marvel Cinematic Universe">
-      <img src="assets/logos/marvel-logo.png" alt="Marvel Logo"/>
+      <img src="assets/logos/marvel-studios-logo.jpeg" alt="Marvel Studios Logo"/>
     </button>
   
-
    <!-- Star Wars Button -->
     <button class="btn" data-franchise="starwars" aria-label="Star Wars">
       <img src="assets/logos/star-wars-logo.jpg" alt="Star Wars Logo"/>
@@ -90,7 +89,12 @@
     <!-- Harry Potter Button -->
     <button class="btn" data-franchise="harrypotter">
       <img src="assets/logos/harry-potter-ww-logo.png" alt="Harry Potter Logo" />
-    </button> 
+    </button>
+
+    <!-- Spider-Man Button -->
+    <button class="btn" data-franchise="spiderman" aria-label="Spider-Man">
+      <img src="assets/logos/spider-man-logo.png" alt="Spider-Man Logo"/>
+    </button>
   
   </div>
   
@@ -104,7 +108,8 @@
       starwars: ['movies'],
       mcu:      ['movies'],
       missionimpossible: ['movies'],
-      harrypotter: ['movies']
+      harrypotter: ['movies'],
+      spiderman: ['movies']
     };
 
     const franchises = document.getElementById('franchises');
