@@ -19,7 +19,7 @@ window.MovieRankerConfig = {
     },
     {
       title: 'What If…? (2021)',
-      poster: 'assets/posters/mcutv/tv/What If…? (2021).png'
+      poster: 'assets/posters/mcutv/tv/What If...? (2021).png'
     },
     {
       title: 'Hawkeye (2021)',
