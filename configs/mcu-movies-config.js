@@ -14,7 +14,7 @@ window.MovieRankerConfig = {
   { title: 'Ant-Man and the Wasp Quantumania (2023)',          poster: 'assets/posters/mcu/movies/Ant-Man and the Wasp Quantumania (2023).jpg' },
   { title: 'Black Panther: Wakanda Forever (2022)',            poster: 'assets/posters/mcu/movies/Black Panther Wakanda Forever (2022).jpg' },
   { title: 'Thor: Love and Thunder (2022)',                    poster: 'assets/posters/mcu/movies/Thor Love and Thunder (2022).jpg' },
-  { title: 'Doctor Strange in the Multiverse of Madness (2022)',poster: 'assets/posters/mcu/movies/Doctor Strange in the Multiverse of Madness (2022).jpg' },
+  { title: 'Doctor Strange in the Multiverse of Madness (2022)',poster: 'assets/posters/mcu/movies/Doctor Strange in the Multiverse of Madness (2022).png' },
   { title: 'Spider-Man: No Way Home (2021)',                   poster: 'assets/posters/mcu/movies/Spider-Man No Way Home (2021).jpg' },
   { title: 'Eternals (2021)',                                  poster: 'assets/posters/mcu/movies/Eternals (2021).jpg' },
   { title: 'Shang-Chi and the Legend of the Ten Rings (2021)', poster: 'assets/posters/mcu/movies/Shang-Chi and the Legend of the Ten Rings (2021).jpg' },
