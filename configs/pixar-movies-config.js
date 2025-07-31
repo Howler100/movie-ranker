@@ -28,7 +28,7 @@ window.MovieRankerConfig = {
     { title: 'Soul (2020)',                        poster: 'assets/posters/pixar/movies/Soul (2020).jpeg' },
     { title: 'Luca (2021)',                        poster: 'assets/posters/pixar/movies/Luca (2021).jpg' },
     { title: 'Turning Red (2022)',                 poster: 'assets/posters/pixar/movies/Turning Red (2022).png' },
-    { title: 'Lightyear (2022)',                   poster: 'assets/posters/pixar/movies/Lightyear (2022).jpg' },
+    { title: 'Lightyear (2022)',                   poster: 'assets/posters/pixar/movies/Lightyear (2022).png' },
     { title: 'Elemental (2023)',                   poster: 'assets/posters/pixar/movies/Elemental (2023).jpg' },
     { title: 'Inside Out 2 (2024)',                poster: 'assets/posters/pixar/movies/Inside Out 2 (2024).jpg' }
   ]
