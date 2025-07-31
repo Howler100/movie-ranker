@@ -5,9 +5,9 @@ window.MovieRankerConfig = {
     fontFamily: "'Luckiest Guy', sans-serif"
   },
   movies: [
-    { title: 'Toy Story (1995)',                  poster: 'assets/posters/pixar/movies/Toy Story (1995).png' },
-    { title: 'Toy Story 2 (1999)',                poster: 'assets/posters/pixar/movies/Toy Story 2 (1999).png' },
     { title: 'Monsters, Inc. (2001)',              poster: 'assets/posters/pixar/movies/Monsters, Inc. (2001).png' },
+    { title: 'Toy Story (1995)',                   poster: 'assets/posters/pixar/movies/Toy Story (1995).png' },
+    { title: 'Toy Story 2 (1999)',                 poster: 'assets/posters/pixar/movies/Toy Story 2 (1999).png' },
     { title: 'Finding Nemo (2003)',                poster: 'assets/posters/pixar/movies/Finding Nemo (2003).png' },
     { title: 'The Incredibles (2004)',             poster: 'assets/posters/pixar/movies/The Incredibles (2004).png' },
     { title: 'Cars (2006)',                        poster: 'assets/posters/pixar/movies/Cars (2006).png' },
