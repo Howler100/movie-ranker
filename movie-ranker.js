@@ -27,9 +27,11 @@
   const controls  = document.getElementById('controls');
   const resetBtn  = document.getElementById('reset-btn');
   const homeBtn   = document.getElementById('home-btn');
+  const undoBtn   = document.getElementById('undo-btn');
 
   let placedCount     = 0;
   let totalPlacements = 0;
+  let undoAction       = null;
 
   // 4) Wire up Home & Reset
   homeBtn.onclick = () => {
@@ -40,6 +42,7 @@
     localStorage.removeItem(STORAGE_KEY);
     window.location.reload();
   };
+  undoBtn.onclick = () => undoLastComparison();
 
   // 5) Initialization
   function init() {
@@ -64,6 +67,7 @@
     controls.style.display = 'none';
     placedCount     = 0;
     totalPlacements = countPlacements(movies.length);
+    undoAction      = null;
     const sorted = await mergeSort(movies.map(m => ({ ...m })));
     localStorage.setItem(STORAGE_KEY, JSON.stringify(sorted));
     showResult(sorted);
@@ -90,24 +94,51 @@
   // 9) Merge two sorted halves via user comparisons. Every push at every
   // recursion level counts toward placedCount, so progress moves smoothly
   // from the first comparison instead of jumping only during the final merge.
+  // ask() is factored out so undoLastComparison() can re-invoke the exact
+  // same comparison after reverting its effect on left/right/merged.
   function merge(left, right) {
     return new Promise(resolve => {
       const merged = [];
-      (function step() {
+      function step() {
         if (left.length && right.length) {
-          showComparison(left[0], right[0]).then(choice => {
-            merged.push(choice === 0 ? left.shift() : right.shift());
-            placedCount++;
-            step();
-          });
+          ask(left[0], right[0]);
         } else {
           // one side is empty → append the rest
           const rest = left.concat(right);
           placedCount += rest.length;
           resolve(merged.concat(rest));
         }
-      })();
+      }
+      function ask(a, b) {
+        showComparison(a, b).then(choice => {
+          const item = choice === 0 ? left.shift() : right.shift();
+          merged.push(item);
+          placedCount++;
+          undoAction = {
+            revert() {
+              merged.pop();
+              placedCount--;
+              (choice === 0 ? left : right).unshift(item);
+            },
+            redisplay: () => ask(a, b)
+          };
+          step();
+        });
+      }
+      step();
     });
+  }
+
+  // Reverse the single most recent comparison and re-show it. Only the
+  // last comparison is ever safely reversible with this recursive
+  // mergeSort — once its merge instance hands off to the next one, undoing
+  // further back would need coordinated rollback across recursive calls.
+  function undoLastComparison() {
+    if (!undoAction) return;
+    const { revert, redisplay } = undoAction;
+    undoAction = null;
+    revert();
+    redisplay();
   }
 
   // 10) Show two posters and return 0 or 1
@@ -116,6 +147,8 @@
       const percent = totalPlacements > 0
         ? Math.min(100, (placedCount / totalPlacements) * 100)
         : 100;
+      undoBtn.style.display = '';
+      undoBtn.disabled      = !undoAction;
       question.innerHTML = `
         <h1>Which do you prefer?</h1>
         <div class="progress-track"
@@ -146,6 +179,7 @@
   function showResult(sorted) {
     question.innerHTML = '<h1>Ranking complete!</h1>';
     choices.style.display = 'none';
+    undoBtn.style.display = 'none';
     container.classList.add('results-active');
     controls.style.display = 'flex';
 

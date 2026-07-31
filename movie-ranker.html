@@ -88,6 +88,14 @@
     background: rgba(255,255,255,0.1);
     transform: scale(1.05);
   }
+  .control-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .control-btn:disabled:hover {
+    background: transparent;
+    transform: none;
+  }
 
   /* 7) choice buttons */
   #choices {
@@ -174,6 +182,7 @@
     <div id="question"><h1>Loading…</h1></div>
     <div id="controls">
       <button id="home-btn"  class="control-btn">Home</button>
+      <button id="undo-btn"  class="control-btn" disabled>Undo</button>
       <button id="reset-btn" class="control-btn">Reset</button>
     </div>
     <div id="choices"></div>
