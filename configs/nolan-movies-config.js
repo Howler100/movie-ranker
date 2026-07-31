@@ -1,7 +1,7 @@
 // configs/nolan-movies-config.js
 window.MovieRankerConfig = {
   theme: {
-    background: 'assets/backgrounds/nolan.jpg',
+    background: 'assets/backgrounds/nolan-background.jpg',
     fontFamily: "'Russo One', sans-serif"
   },
   movies: [
