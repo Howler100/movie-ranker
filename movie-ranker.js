@@ -1,9 +1,9 @@
 // movie-ranker.js
 (async () => {
-  const STORAGE_KEY = 'mcuRanking';
   const params      = new URLSearchParams(window.location.search);
   const theme       = params.get('theme')    || 'starwars';
   const category    = params.get('category') || 'movies';
+  const STORAGE_KEY = `${theme}-${category}-Ranking`;
 
   // 1) Load the selected config
   try {
@@ -27,6 +27,9 @@
   const controls  = document.getElementById('controls');
   const resetBtn  = document.getElementById('reset-btn');
   const homeBtn   = document.getElementById('home-btn');
+
+  let comparisonCount  = 0;
+  let totalComparisons = 0;
 
   // 4) Wire up Home & Reset
   homeBtn.onclick = () => {
@@ -59,6 +62,8 @@
     question.innerHTML = '<h1>Loading…</h1>';
     choices.style.display = 'none';
     controls.style.display = 'none';
+    comparisonCount  = 0;
+    totalComparisons = Math.ceil(movies.length * Math.log2(movies.length));
     const sorted = await mergeSort(movies.map(m => ({ ...m })));
     localStorage.setItem(STORAGE_KEY, JSON.stringify(sorted));
     showResult(sorted);
@@ -94,7 +99,9 @@
   // 9) Show two posters and return 0 or 1
   function showComparison(a, b) {
     return new Promise(resolve => {
-      question.innerHTML = '<h1>Which do you prefer?</h1>';
+      comparisonCount++;
+      question.innerHTML = `<h1>Which do you prefer?</h1>
+        <p class="progress">Comparison ${comparisonCount} of ~${totalComparisons}</p>`;
       choices.innerHTML = '';
       choices.style.display  = 'flex';
       controls.style.display = 'flex';
