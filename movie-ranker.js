@@ -28,8 +28,8 @@
   const resetBtn  = document.getElementById('reset-btn');
   const homeBtn   = document.getElementById('home-btn');
 
-  let finalizedCount = 0;
-  let totalItems     = 0;
+  let placedCount     = 0;
+  let totalPlacements = 0;
 
   // 4) Wire up Home & Reset
   homeBtn.onclick = () => {
@@ -62,51 +62,59 @@
     question.innerHTML = '<h1>Loading…</h1>';
     choices.style.display = 'none';
     controls.style.display = 'none';
-    finalizedCount = 0;
-    totalItems     = movies.length;
+    placedCount     = 0;
+    totalPlacements = countPlacements(movies.length);
     const sorted = await mergeSort(movies.map(m => ({ ...m })));
     localStorage.setItem(STORAGE_KEY, JSON.stringify(sorted));
     showResult(sorted);
   }
 
-  // 7) Standard recursive mergeSort
-  async function mergeSort(arr, isRoot = true) {
-    if (arr.length <= 1) return arr;
-    const mid   = Math.floor(arr.length / 2);
-    const left  = await mergeSort(arr.slice(0, mid), false);
-    const right = await mergeSort(arr.slice(mid), false);
-    return merge(left, right, isRoot);
+  // 7) Exact count of item-placements across the whole merge tree, computed
+  // structurally (same split as mergeSort) so it's known before any
+  // comparisons happen — not an estimate like n*log2(n).
+  function countPlacements(n) {
+    if (n <= 1) return 0;
+    const mid = Math.floor(n / 2);
+    return countPlacements(mid) + countPlacements(n - mid) + n;
   }
 
-  // 8) Merge two sorted halves via user comparisons
-  // Only the root merge places items into their true final position —
-  // merges below it just order items within a subset a later merge can
-  // still reshuffle, so only root pushes count toward finalizedCount.
-  function merge(left, right, isRoot) {
+  // 8) Standard recursive mergeSort
+  async function mergeSort(arr) {
+    if (arr.length <= 1) return arr;
+    const mid   = Math.floor(arr.length / 2);
+    const left  = await mergeSort(arr.slice(0, mid));
+    const right = await mergeSort(arr.slice(mid));
+    return merge(left, right);
+  }
+
+  // 9) Merge two sorted halves via user comparisons. Every push at every
+  // recursion level counts toward placedCount, so progress moves smoothly
+  // from the first comparison instead of jumping only during the final merge.
+  function merge(left, right) {
     return new Promise(resolve => {
       const merged = [];
       (function step() {
         if (left.length && right.length) {
           showComparison(left[0], right[0]).then(choice => {
             merged.push(choice === 0 ? left.shift() : right.shift());
-            if (isRoot) finalizedCount++;
+            placedCount++;
             step();
           });
         } else {
           // one side is empty → append the rest
           const rest = left.concat(right);
-          if (isRoot) finalizedCount += rest.length;
+          placedCount += rest.length;
           resolve(merged.concat(rest));
         }
       })();
     });
   }
 
-  // 9) Show two posters and return 0 or 1
+  // 10) Show two posters and return 0 or 1
   function showComparison(a, b) {
     return new Promise(resolve => {
-      const percent = totalItems > 0
-        ? Math.min(100, (finalizedCount / totalItems) * 100)
+      const percent = totalPlacements > 0
+        ? Math.min(100, (placedCount / totalPlacements) * 100)
         : 100;
       question.innerHTML = `
         <h1>Which do you prefer?</h1>
@@ -134,7 +142,7 @@
     });
   }
 
-  // 10) Render the complete sorted list
+  // 11) Render the complete sorted list
   function showResult(sorted) {
     question.innerHTML = '<h1>Ranking complete!</h1>';
     choices.style.display = 'none';
