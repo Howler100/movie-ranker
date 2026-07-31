@@ -100,8 +100,18 @@
   function showComparison(a, b) {
     return new Promise(resolve => {
       comparisonCount++;
-      question.innerHTML = `<h1>Which do you prefer?</h1>
-        <p class="progress">Comparison ${comparisonCount} of ~${totalComparisons}</p>`;
+      const percent = totalComparisons > 0
+        ? Math.min(100, (comparisonCount / totalComparisons) * 100)
+        : 100;
+      question.innerHTML = `
+        <h1>Which do you prefer?</h1>
+        <div class="progress-track"
+             style="width:100%;height:8px;background:rgba(255,255,255,0.15);
+                    border-radius:4px;overflow:hidden;margin:0 0 var(--gap);">
+          <div class="progress-fill"
+               style="width:${percent}%;height:100%;background:#fff;
+                      border-radius:4px;transition:width .2s ease;"></div>
+        </div>`;
       choices.innerHTML = '';
       choices.style.display  = 'flex';
       controls.style.display = 'flex';
