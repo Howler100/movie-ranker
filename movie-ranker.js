@@ -28,8 +28,8 @@
   const resetBtn  = document.getElementById('reset-btn');
   const homeBtn   = document.getElementById('home-btn');
 
-  let comparisonCount  = 0;
-  let totalComparisons = 0;
+  let finalizedCount = 0;
+  let totalItems     = 0;
 
   // 4) Wire up Home & Reset
   homeBtn.onclick = () => {
@@ -62,35 +62,41 @@
     question.innerHTML = '<h1>Loading…</h1>';
     choices.style.display = 'none';
     controls.style.display = 'none';
-    comparisonCount  = 0;
-    totalComparisons = Math.ceil(movies.length * Math.log2(movies.length));
+    finalizedCount = 0;
+    totalItems     = movies.length;
     const sorted = await mergeSort(movies.map(m => ({ ...m })));
     localStorage.setItem(STORAGE_KEY, JSON.stringify(sorted));
     showResult(sorted);
   }
 
   // 7) Standard recursive mergeSort
-  async function mergeSort(arr) {
+  async function mergeSort(arr, isRoot = true) {
     if (arr.length <= 1) return arr;
     const mid   = Math.floor(arr.length / 2);
-    const left  = await mergeSort(arr.slice(0, mid));
-    const right = await mergeSort(arr.slice(mid));
-    return merge(left, right);
+    const left  = await mergeSort(arr.slice(0, mid), false);
+    const right = await mergeSort(arr.slice(mid), false);
+    return merge(left, right, isRoot);
   }
 
   // 8) Merge two sorted halves via user comparisons
-  function merge(left, right) {
+  // Only the root merge places items into their true final position —
+  // merges below it just order items within a subset a later merge can
+  // still reshuffle, so only root pushes count toward finalizedCount.
+  function merge(left, right, isRoot) {
     return new Promise(resolve => {
       const merged = [];
       (function step() {
         if (left.length && right.length) {
           showComparison(left[0], right[0]).then(choice => {
             merged.push(choice === 0 ? left.shift() : right.shift());
+            if (isRoot) finalizedCount++;
             step();
           });
         } else {
           // one side is empty → append the rest
-          resolve(merged.concat(left, right));
+          const rest = left.concat(right);
+          if (isRoot) finalizedCount += rest.length;
+          resolve(merged.concat(rest));
         }
       })();
     });
@@ -99,9 +105,8 @@
   // 9) Show two posters and return 0 or 1
   function showComparison(a, b) {
     return new Promise(resolve => {
-      comparisonCount++;
-      const percent = totalComparisons > 0
-        ? Math.min(100, (comparisonCount / totalComparisons) * 100)
+      const percent = totalItems > 0
+        ? Math.min(100, (finalizedCount / totalItems) * 100)
         : 100;
       question.innerHTML = `
         <h1>Which do you prefer?</h1>
