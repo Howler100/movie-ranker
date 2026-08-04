@@ -28,6 +28,6 @@ window.MovieRankerConfig = {
     { title: 'Your Friendly Neighborhood Spider-Man (2025) - Season 1',
       poster: 'assets/posters/spiderman/movies/Your Friendly Neighborhood Spider-Man (2025) - Season 1.jpg' },
     { title: 'Spider-Man Brand New Day (2026)',
-      poster: 'assets/posters/spiderman/movies/Spider-Man Brand New Day (2026).svg' }
+      poster: 'assets/posters/spiderman/movies/Spider-Man Brand New Day (2026).webp' }
   ]
 };
