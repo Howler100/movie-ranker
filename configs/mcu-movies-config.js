@@ -41,6 +41,7 @@ window.MovieRankerConfig = {
     { title: 'Deadpool & Wolverine (2024)',                      poster: 'assets/posters/mcu/movies/Deadpool Wolverine (2024).jpg' },
     { title: 'Captain America: Brave New World (2025)',          poster: 'assets/posters/mcu/movies/Captain America Brave New World (2025).jpg' },
     { title: 'Thunderbolts (2025)',                              poster: 'assets/posters/mcu/movies/Thunderbolts (2025).jpg' },
-    { title: 'Fantastic Four: First Steps (2025)',               poster: 'assets/posters/mcu/movies/Fantastic Four First Steps (2025).jpg' }
+    { title: 'Fantastic Four: First Steps (2025)',               poster: 'assets/posters/mcu/movies/Fantastic Four First Steps (2025).jpg' },
+    { title: 'Spider-Man: Brand New Day (2026)',                 poster: 'assets/posters/mcu/movies/Spider-Man Brand New Day (2026).webp' }
   ]
 };
