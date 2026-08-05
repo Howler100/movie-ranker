@@ -65,6 +65,56 @@
       background: rgba(255,255,255,0.1);
       transform: scale(1.05);
     }
+
+    /* POSTER STYLE MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      z-index: 1000;
+    }
+    .modal-card {
+      background: #1a1a1a;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      padding: 1.5rem;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+    }
+    .modal-card h1 {
+      font-size: 1.4rem;
+      margin-bottom: 1.25rem;
+    }
+    .modal-options {
+      display: flex;
+      gap: 1.25rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .modal-option {
+      background: transparent;
+      border: 2px solid transparent;
+      border-radius: 6px;
+      padding: 0;
+      width: 150px;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .modal-option:hover {
+      transform: scale(1.04);
+      border-color: #fff;
+    }
+    .modal-option img {
+      width: 100%;
+      display: block;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    }
   </style>
 </head>
 <body>
@@ -122,6 +172,13 @@
     <!-- category buttons will be injected here -->
   </div>
 
+  <div id="poster-style-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-card">
+      <h1>Choose a Poster Style</h1>
+      <div id="poster-style-options" class="modal-options"></div>
+    </div>
+  </div>
+
   <script>
     // define which categories exist for each franchise
     const available = {
@@ -139,34 +196,51 @@
     // franchises that let the user pick between alternate poster collections
     const posterSets = {
       pirates: [
-        { key: 'mp',   label: 'Movie Posters' },
-        { key: 'ship', label: 'Stylized Ships' }
+        { key: 'mp',   label: 'Movie Posters',
+          preview: 'assets/posters/pirates/movies/mp/Curse of the Black Pearl (2003).webp' },
+        { key: 'ship', label: 'Stylized Ships',
+          preview: 'assets/posters/pirates/movies/ship/Curse of the Black Pearl (2003).webp' }
       ]
     };
 
-    const franchises = document.getElementById('franchises');
-    const categories  = document.getElementById('categories');
+    const franchises        = document.getElementById('franchises');
+    const categories        = document.getElementById('categories');
+    const posterModal       = document.getElementById('poster-style-modal');
+    const posterModalOptions = document.getElementById('poster-style-options');
     let chosenFranchise = null;
 
     function goToRanker(theme, category) {
       const sets = posterSets[theme];
       if (sets) {
-        categories.innerHTML = `<h1>Choose a Poster Style</h1>`;
+        posterModalOptions.innerHTML = '';
         sets.forEach(set => {
           const b = document.createElement('button');
-          b.className = 'btn-text';
+          b.className = 'modal-option';
           b.dataset.posterset = set.key;
           b.dataset.theme = theme;
           b.dataset.category = category;
-          b.textContent = set.label;
-          categories.appendChild(b);
+          b.title = set.label;
+          b.innerHTML = `<img src="${set.preview}" alt="${set.label}"/>`;
+          posterModalOptions.appendChild(b);
         });
-        categories.style.display = 'flex';
+        posterModal.style.display = 'flex';
       } else {
         window.location.href =
           `movie-ranker.html?theme=${theme}&category=${category}`;
       }
     }
+
+    posterModalOptions.addEventListener('click', e => {
+      const btn = e.target.closest('button[data-posterset]');
+      if (!btn) return;
+      window.location.href =
+        `movie-ranker.html?theme=${btn.dataset.theme}&category=${btn.dataset.category}&posterSet=${btn.dataset.posterset}`;
+    });
+
+    // click the backdrop to dismiss without choosing
+    posterModal.addEventListener('click', e => {
+      if (e.target === posterModal) posterModal.style.display = 'none';
+    });
 
     franchises.addEventListener('click', e => {
       const btn = e.target.closest('button[data-franchise]');
@@ -192,12 +266,6 @@
     });
 
     categories.addEventListener('click', e => {
-      const posterBtn = e.target.closest('button[data-posterset]');
-      if (posterBtn) {
-        window.location.href =
-          `movie-ranker.html?theme=${posterBtn.dataset.theme}&category=${posterBtn.dataset.category}&posterSet=${posterBtn.dataset.posterset}`;
-        return;
-      }
       const btn = e.target.closest('button[data-category]');
       if (!btn) return;
       const cat = btn.dataset.category;
