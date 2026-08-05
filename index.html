@@ -111,6 +111,11 @@
       <img src="assets/logos/nolan-logo.jpeg" alt="Christopher Nolan Logo"/>
     </button>
 
+    <!-- Pirates of the Caribbean Button -->
+    <button class="btn" data-franchise="pirates" aria-label="Pirates of the Caribbean">
+      <img src="assets/logos/pirates-logo.jpg" alt="Pirates of the Caribbean Logo"/>
+    </button>
+
   </div>
   
   <div id="categories" class="subchoices" style="display:none;">
@@ -127,12 +132,41 @@
       spiderman:         ['movies'],
       mcutv:             ['tv'],
       pixar:             ['movies'],
-      nolan:             ['movies']
+      nolan:             ['movies'],
+      pirates:           ['movies']
+    };
+
+    // franchises that let the user pick between alternate poster collections
+    const posterSets = {
+      pirates: [
+        { key: 'mp',   label: 'Movie Posters' },
+        { key: 'ship', label: 'Stylized Ships' }
+      ]
     };
 
     const franchises = document.getElementById('franchises');
     const categories  = document.getElementById('categories');
     let chosenFranchise = null;
+
+    function goToRanker(theme, category) {
+      const sets = posterSets[theme];
+      if (sets) {
+        categories.innerHTML = `<h1>Choose a Poster Style</h1>`;
+        sets.forEach(set => {
+          const b = document.createElement('button');
+          b.className = 'btn-text';
+          b.dataset.posterset = set.key;
+          b.dataset.theme = theme;
+          b.dataset.category = category;
+          b.textContent = set.label;
+          categories.appendChild(b);
+        });
+        categories.style.display = 'flex';
+      } else {
+        window.location.href =
+          `movie-ranker.html?theme=${theme}&category=${category}`;
+      }
+    }
 
     franchises.addEventListener('click', e => {
       const btn = e.target.closest('button[data-franchise]');
@@ -142,8 +176,7 @@
 
       if (cats.length === 1) {
         // skip sub-step
-        window.location.href =
-          `movie-ranker.html?theme=${chosenFranchise}&category=${cats[0]}`;
+        goToRanker(chosenFranchise, cats[0]);
       } else {
         // show category choices
         categories.innerHTML = `<h1>2) Choose a Category</h1>`;
@@ -159,11 +192,16 @@
     });
 
     categories.addEventListener('click', e => {
+      const posterBtn = e.target.closest('button[data-posterset]');
+      if (posterBtn) {
+        window.location.href =
+          `movie-ranker.html?theme=${posterBtn.dataset.theme}&category=${posterBtn.dataset.category}&posterSet=${posterBtn.dataset.posterset}`;
+        return;
+      }
       const btn = e.target.closest('button[data-category]');
       if (!btn) return;
       const cat = btn.dataset.category;
-      window.location.href =
-        `movie-ranker.html?theme=${chosenFranchise}&category=${cat}`;
+      goToRanker(chosenFranchise, cat);
     });
   </script>
 </body>

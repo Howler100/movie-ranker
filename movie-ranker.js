@@ -3,7 +3,7 @@
   const params      = new URLSearchParams(window.location.search);
   const theme       = params.get('theme')    || 'starwars';
   const category    = params.get('category') || 'movies';
-  const STORAGE_KEY = `${theme}-${category}-Ranking`;
+  const posterSet   = params.get('posterSet') || 'mp';
 
   // 1) Load the selected config
   try {
@@ -14,6 +14,19 @@
     return;
   }
   const { theme: cfgTheme, movies } = window.MovieRankerConfig;
+
+  // Some configs offer alternate poster collections (movie.posters = {key: url})
+  // instead of a single movie.poster; resolve the chosen set here so the rest
+  // of the app only ever deals with movie.poster.
+  const usesPosterSets = movies.some(m => m.posters);
+  if (usesPosterSets) {
+    movies.forEach(m => {
+      m.poster = m.posters[posterSet] || m.posters.mp || Object.values(m.posters)[0];
+    });
+  }
+  const STORAGE_KEY = usesPosterSets
+    ? `${theme}-${category}-${posterSet}-Ranking`
+    : `${theme}-${category}-Ranking`;
 
   // 2) Apply background & font
   document.documentElement.style.setProperty('--bg', `url('${cfgTheme.background}')`);
