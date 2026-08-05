@@ -3,7 +3,7 @@
   const params      = new URLSearchParams(window.location.search);
   const theme       = params.get('theme')    || 'starwars';
   const category    = params.get('category') || 'movies';
-  const posterSet   = params.get('posterSet') || 'mp';
+  const posterSet   = params.get('posterSet') || 'current';
 
   // 1) Load the selected config
   try {
@@ -21,7 +21,7 @@
   const usesPosterSets = movies.some(m => m.posters);
   if (usesPosterSets) {
     movies.forEach(m => {
-      m.poster = m.posters[posterSet] || m.posters.mp || Object.values(m.posters)[0];
+      m.poster = m.posters[posterSet] || m.posters.current || m.posters.mp || Object.values(m.posters)[0];
     });
   }
   const STORAGE_KEY = usesPosterSets
