@@ -21,6 +21,7 @@
   const usesPosterSets = movies.some(m => m.posters);
   if (usesPosterSets) {
     movies.forEach(m => {
+      if (!m.posters) return;
       m.poster = m.posters[posterSet] || m.posters.current || m.posters.mp || Object.values(m.posters)[0];
     });
   }
